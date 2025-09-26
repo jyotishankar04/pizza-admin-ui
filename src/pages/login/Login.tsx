@@ -3,6 +3,7 @@ import { LockFilled, LockOutlined, UserOutlined } from "@ant-design/icons"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import type { Credentials } from "../../types"
 import { login, self } from "../../http/api"
+import { useAuthStore } from "../../store"
 
 const loginUser = async (userData: Credentials) => {
    const res = await login(userData)
@@ -16,6 +17,7 @@ const  getSelf = async () => {
 
 
 const Login = () => {
+  const { setUser } = useAuthStore()
   const { data: selfData, refetch } = useQuery({
     queryKey: ['self'],
     queryFn: getSelf,
@@ -26,8 +28,10 @@ const Login = () => {
     mutationFn:loginUser,
     onSuccess: async() => {
         await refetch()
-        console.log(selfData)
-    },
+        if(selfData){
+          setUser(selfData.data)
+        }
+      },
   })
   return (
     <div>
@@ -99,7 +103,7 @@ const Login = () => {
             <Form.Item>
 
               <Button  loading={isPending} type="primary" htmlType="submit" className="w-full" >Login</Button>
-              <p>Don't have an account? <a href="/auth/register">Sign Up</a></p>
+              <p className="mt-5">Don't have an account? <a href="/auth/register">Sign Up</a></p>
             </Form.Item>
           </Form>
         </Card>
