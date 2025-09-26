@@ -1,33 +1,98 @@
-import { Button, Card, Input, Layout, Space } from "antd"
-import { LockOutlined } from "@ant-design/icons"
+import { Alert, Button, Card, Checkbox, Form, Input, Layout, Space } from "antd"
+import { LockFilled, LockOutlined, UserOutlined } from "@ant-design/icons"
+import { useMutation } from "@tanstack/react-query"
+import type { Credentials } from "../../types"
+import { login } from "../../http/api"
+
+const loginUser = async (userData: Credentials) => {
+   const res = await login(userData)
+   return res.data  
+}
+
+
+
+
 const Login = () => {
+  const { mutateAsync, isPending, isError, error } = useMutation({
+    mutationKey: ['login'],
+    mutationFn:loginUser,
+    onSuccess: (data) => {
+      console.log(data)
+    },
+  })
   return (
     <div>
       <Layout className="w-screen h-screen flex justify-center items-center gap-5">
-        <div className="flex justify-center items-center text-blue-600">
-          <h1 className="text-4xl font-bold">Pizza Zone</h1>
+        <div className="flex justify-center items-center ">
+          <Layout.Content className="text-4xl font-bold text-[#F65F42]">Pizza Zone</Layout.Content>
         </div>
         <Card title={
           <Space className="flex justify-center items-center w-full">
-            <LockOutlined />
+            <LockFilled />
             Sign In
           </Space>
         }
           className="w-80"
         >
-          <div className="flex flex-col gap-2">
-            <Input placeholder="Email" />
-            <Input.Password placeholder="Password" />
-            <div className="flex justify-between items-center">
+          <Form className="" initialValues={
+            {
+              remember: true
+            }
+          }
+          onFinish={async(values) => {
+            await mutateAsync({
+              email: values.username,
+              password: values.password
+            })
+          }}
+          onFinishFailed={(errorInfo) => {
+            console.log('Failed:', errorInfo);
+          }}
+          >
+            {
+              isError && <Alert message={error?.message} type="error" className="mb-5" />
+            }
+            <Form.Item name={"username"} rules={[
+              {
+                required: true,
+                message: 'Please input your username!',
+              },
+              {
+                type: 'email',
+                message: 'The input is not valid E-mail!',
+              }
+            ]}>
+              <Input prefix={<UserOutlined />} placeholder="Username" />
+            </Form.Item>
+            <Form.Item name={"password"} rules={[
+            { 
+              required: true, 
+              message: 'Please input your password!' 
+            },
+            {
+              type: 'string',
+              message: 'The input is not valid Password!',
+            }
+            ]}>
+              <Input.Password prefix={<LockOutlined />} placeholder="Password" />
+            </Form.Item>
+            <Form.Item >
+              <div className="flex justify-between w-full">
+
               <Space>
-                <input type="checkbox" id="remember" />
-                <label htmlFor="remember">Remember me</label>
+                <Form.Item name="remember" valuePropName="checked" noStyle>
+                  <Checkbox>Remember me</Checkbox>
+                </Form.Item>
               </Space>
               <a href="/forgot">Forgot Password</a>
-            </div>
-            <Button type="primary">Login</Button>
-            <p>Don't have an account? <a href="/auth/register">Sign Up</a></p>
-          </div>
+              </div>
+            </Form.Item>
+            <Form.Item>
+
+              <Button  loading={isPending} type="primary" htmlType="submit" className="w-full" >Login</Button>
+              <p>Don't have an account? <a href="/auth/register">Sign Up</a></p>
+            </Form.Item>
+          </Form>
         </Card>
       </Layout>
     </div>
