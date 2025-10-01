@@ -1,3 +1,4 @@
+import type { Tanent } from "../store"
 import type { Credentials } from "../types"
 import { api } from "./client"
 
@@ -7,3 +8,6 @@ export const logout = async () => api.post('/auth/logout')
 
 // users
 export const getUsers = async () => (await api.get('/users')).data
+
+// tanents
+export const getTanents = async () => (await api.get<{data: {tanents: Tanent[]}}>('/tanents')).data

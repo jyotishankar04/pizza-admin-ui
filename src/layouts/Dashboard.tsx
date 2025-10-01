@@ -17,8 +17,8 @@ const items = [
     icon: <HomeOutlined />
   },
   {
-    key: "/restaurants",
-    label: <NavLink to="/restaurants">Restaurants</NavLink>,
+    key: "/tanents",
+    label: <NavLink to="/tanents">Tanents</NavLink>,
     icon: <ShopOutlined />
   },
   {

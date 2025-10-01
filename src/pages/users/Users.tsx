@@ -1,4 +1,4 @@
-import { Badge, Breadcrumb, Space, Table } from "antd"
+import { Badge, Breadcrumb, Button, Drawer, Space, Table } from "antd"
 import { RightOutlined } from "@ant-design/icons"
 import { Link, Navigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -6,6 +6,7 @@ import { getUsers } from "../../http/api";
 import { useAuthStore, type User } from "../../store";
 import LoadingComponent from "../../components/Loading";
 import UsersFilter from "./UsersFilter";
+import { useState } from "react";
 const columns = [
   {
     title: 'Name',
@@ -30,13 +31,13 @@ const columns = [
   }
 ]
 const Users = () => {
-  const {user} = useAuthStore()
+  const { user } = useAuthStore()
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   const { data: users, isLoading, isSuccess } = useQuery({
     queryKey: ['users'],
     queryFn: () => getUsers()
   })
-  console.log(users)
   const breadcrumbs = [
     {
       title: <Link to="/" className="text-black">Dashboard</Link>,
@@ -46,18 +47,34 @@ const Users = () => {
     },
   ];
 
-  if(user?.role !== "admin") return <Navigate to="/" replace />
+  if (user?.role !== "admin") return <Navigate to="/" replace />
 
   return (
     <Space direction="vertical" className="w-full" size={"large"}>
       <Breadcrumb separator={<RightOutlined />} items={breadcrumbs} />
-      <UsersFilter />
+      <UsersFilter onFilterChange={(filterName, filterValue) => console.log(filterName, filterValue)} >
+        <Button type="primary" onClick={() => { setDrawerOpen(true) }}>Add User</Button>
+      </UsersFilter>
       <div className="w-full">
         {isLoading && <LoadingComponent text="Fetching users..." />}
         {
-          isSuccess && <Table dataSource={users.data} columns={columns} loading={isLoading} />
+          isSuccess && <Table dataSource={users.data} columns={columns} loading={isLoading} rowKey={record => record.id} />
         }
       </div>
+
+      <Drawer title="Create User" open={drawerOpen} placement="right" width={720} destroyOnClose onClose={() => { setDrawerOpen(false) }}
+        extra={
+          <Space>
+            <Button onClick={() => { setDrawerOpen(false) }}>Cancel</Button>
+            <Button onClick={() => console.log("submit")} type="primary">
+              Submit
+            </Button>
+          </Space>
+        }
+      >
+        <p>Some contents...</p>
+
+      </Drawer>
     </Space>
   )
 }
