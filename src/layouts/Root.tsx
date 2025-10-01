@@ -23,7 +23,7 @@ const Root = () => {
     },
   })
   useEffect(() => {
-    if (selfData) setUser(selfData)
+    if (selfData) setUser(selfData.data)
   }, [selfData, setUser])
  useEffect(() => {
     if (isError) <Navigate to="/auth/login" replace={true} />

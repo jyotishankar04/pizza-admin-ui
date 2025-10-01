@@ -4,7 +4,7 @@ import Login from "./pages/login/Login";
 import Dashboard from "./layouts/Dashboard";
 import NonAuth from "./layouts/NonAuth";
 import Root from "./layouts/Root";
-import Users from "./pages/Users";
+import Users from "./pages/users/Users";
 import Restaurants from "./pages/Restaurants";
 import Products from "./pages/Products";
 import Orders from "./pages/Orders";

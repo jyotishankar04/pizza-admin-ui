@@ -4,8 +4,8 @@ import { useMutation, useQuery } from "@tanstack/react-query"
 import type { Credentials } from "../../types"
 import { login, self } from "../../http/api"
 import { useAuthStore } from "../../store"
-import { logout as logoutApi } from "../../http/api"
 import { usePermissions } from "../../hooks/usePermissions"
+import { useLogoutMutation } from "../../lib/query"
 
 const loginUser = async (userData: Credentials) => {
   const res = await login(userData)
@@ -20,20 +20,14 @@ const getSelf = async () => {
 
 const Login = () => {
   const { isAllowed } = usePermissions()
-  const { setUser, logout } = useAuthStore()
+  const { setUser } = useAuthStore()
   const { data: selfData, refetch } = useQuery({
     queryKey: ['self'],
     queryFn: getSelf,
     enabled: false,
   })
 
-  const { mutateAsync: logoutMutation } = useMutation({
-    mutationKey: ['logout'],
-    mutationFn: logoutApi,
-    onSuccess: () => {
-      logout()
-    }
-  })
+  const { mutateAsync: logoutMutation } = useLogoutMutation()
   const { mutateAsync, isPending, isError, error } = useMutation({
     mutationKey: ['login'],
     mutationFn: loginUser,
