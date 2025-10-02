@@ -1,4 +1,4 @@
-import type { Tanent } from "../store"
+import type { Tanent } from "../types"
 import type { Credentials } from "../types"
 import { api } from "./client"
 
@@ -11,3 +11,4 @@ export const getUsers = async () => (await api.get('/users')).data
 
 // tanents
 export const getTanents = async () => (await api.get<{data: {tanents: Tanent[]}}>('/tanents')).data
+export const getTanent = async (id: string) => (await api.get(`/tanents/${id}`)).data

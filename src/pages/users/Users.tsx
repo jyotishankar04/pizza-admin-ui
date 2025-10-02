@@ -1,4 +1,4 @@
-import { Badge, Breadcrumb, Button, Drawer, Space, Table } from "antd"
+import { Badge, Breadcrumb, Button, Drawer, Form, Space, Table, theme } from "antd"
 import { RightOutlined } from "@ant-design/icons"
 import { Link, Navigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -7,6 +7,7 @@ import { useAuthStore, type User } from "../../store";
 import LoadingComponent from "../../components/Loading";
 import UsersFilter from "./UsersFilter";
 import { useState } from "react";
+import UserForm from "./UserForm";
 const columns = [
   {
     title: 'Name',
@@ -33,7 +34,7 @@ const columns = [
 const Users = () => {
   const { user } = useAuthStore()
   const [drawerOpen, setDrawerOpen] = useState(false);
-
+  const { token: { colorBgBase } } = theme.useToken();
   const { data: users, isLoading, isSuccess } = useQuery({
     queryKey: ['users'],
     queryFn: () => getUsers()
@@ -62,7 +63,7 @@ const Users = () => {
         }
       </div>
 
-      <Drawer title="Create User" open={drawerOpen} placement="right" width={720} destroyOnClose onClose={() => { setDrawerOpen(false) }}
+      <Drawer title="Create User" style={{ backgroundColor: "whitesmoke" }} open={drawerOpen} placement="right" width={720} destroyOnClose onClose={() => { setDrawerOpen(false) }}
         extra={
           <Space>
             <Button onClick={() => { setDrawerOpen(false) }}>Cancel</Button>
@@ -72,8 +73,10 @@ const Users = () => {
           </Space>
         }
       >
-        <p>Some contents...</p>
-
+        <Form
+          layout="vertical">
+          <UserForm />
+        </Form>
       </Drawer>
     </Space>
   )

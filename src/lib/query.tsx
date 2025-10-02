@@ -1,5 +1,5 @@
-import { useMutation } from "@tanstack/react-query";
-import { logout } from "../http/api";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import {  getTanents, logout } from "../http/api";
 import { useAuthStore } from "../store";
 
 export const useLogoutMutation = () => {
@@ -10,3 +10,10 @@ export const useLogoutMutation = () => {
         },
     });
 };
+
+
+// Tanents
+export const useGetTenants =()=>  useQuery({
+    queryKey: ['tenants'],
+    queryFn: getTanents,
+})

@@ -1,11 +1,10 @@
 import { Breadcrumb, Button, Drawer, Space, Table } from "antd"
 import { Link } from "react-router-dom";
 import { RightOutlined } from "@ant-design/icons";
-import { useQuery } from "@tanstack/react-query";
-import { getTanents } from "../../http/api";
 import LoadingComponent from "../../components/Loading";
 import TanentsFilter from "./TanentsFilter";
 import { useState } from "react";
+import { useGetTenants } from "../../lib/query";
 
 
 const breadcrumbs = [
@@ -37,10 +36,7 @@ const columns = [
 
 const Restaurants = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const { data:tanents, isLoading, isSuccess } = useQuery({
-    queryKey: ['tanents'],
-    queryFn: () => getTanents(),
-  })
+  const { data:tanents, isLoading, isSuccess } = useGetTenants()
   return (
     <Space direction="vertical" className="w-full" size={"large"}>
       <Breadcrumb separator={<RightOutlined />} items={breadcrumbs} />
