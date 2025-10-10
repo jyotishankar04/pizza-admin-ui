@@ -20,3 +20,13 @@ export interface User {
     role: string;
     tanent?: Tanent
 }
+
+// For creating a user, we don't need id and we need password
+export interface CreateUserRequest {
+    email: string;
+    firstName: string;
+    lastName: string;
+    role: string;
+    password: string;
+    tanentId?: string; // Use tanentId instead of full tanent object
+}

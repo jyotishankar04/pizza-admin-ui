@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import {  getTanents, logout } from "../http/api";
+import {  createUser, getTanents, logout } from "../http/api";
 import { useAuthStore } from "../store";
+import type { CreateUserRequest } from "../types";
 
 export const useLogoutMutation = () => {
     return useMutation({
@@ -10,6 +11,13 @@ export const useLogoutMutation = () => {
         },
     });
 };
+
+// User mutation
+export const useCreateUser = () => useMutation({
+    mutationKey: ['createUser'],
+    mutationFn: (user: CreateUserRequest) => createUser(user),
+})
+
 
 
 // Tanents
